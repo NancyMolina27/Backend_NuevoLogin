@@ -86,7 +86,7 @@ class RolesController extends Controller
 
         //Validar los datos
         $validate = Validator::make($params_array,[
-          'nombre' =>'required|unique:roles',
+          'nombre' =>'required',
           'description' =>'required',
         ]);
         if($validate->fails())
