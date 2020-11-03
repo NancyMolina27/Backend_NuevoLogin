@@ -33,6 +33,7 @@ class JwtAuth
           'email'=>$user->email,
           'name'=> $user->name,
           'surname'=> $user->surname,
+          'roles_id'=>$user->roles_id,
           'iat' =>time(), // inicio de token 
           'exp' =>time() + (7 * 24 * 60 * 60) //tiempo para expirar el token 
           );
