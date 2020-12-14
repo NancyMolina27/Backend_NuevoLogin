@@ -22,6 +22,7 @@ Route::post('/api/register', 'App\Http\Controllers\UserController@register' );
 Route::post('/api/login', 'App\Http\Controllers\UserController@login' );
 Route::post('/api/clientes', 'App\Http\Controllers\UserController@getClientes' );
 Route::post('/api/operador', 'App\Http\Controllers\UserController@getOperador' );
+Route::post('/api/rol', 'App\Http\Controllers\UserController@getRol' );
 
 //Cambiar contraseña 
 Route::post('/api/reset-password', 'App\Http\Controllers\ResetPasswordController@sendEmail' );

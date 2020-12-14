@@ -110,7 +110,7 @@ class RolesController extends Controller
         $data = array(
           'message' => 'Rol incorrecto',
           'status' => 'error',
-          'code' => 300
+          'code' => 400
         );
       }
       return response()->json($data, 200);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\JwtAuth;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Roles;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -57,14 +58,14 @@ class UserController extends Controller
                 );
             }
       }else{
-          $data = array(
-              'status' => 'error',
-              'code' => 400,
-              'message' => 'Usuario no creado'
-          );
-        }
-      return response()->json($data, 200);
-  }//Fin metodo register
+              $data = array(
+                  'status' => 'error',
+                  'code' => 400,
+                  'message' => 'Usuario no creado'
+              );
+            }
+    return response()->json($data, 200);
+    }//Fin método register
 
   public function login(Request $request){
       $jwtAuth = new JwtAuth();
@@ -92,7 +93,7 @@ class UserController extends Controller
         );
       }
       return response()->json($signup,200);
-  }//Fin metodo login
+  }//Fin método login
 
   public function index(Request $request ){
       /* $user = DB::table('users')->where('roles_id','2')->get(); */
@@ -101,61 +102,64 @@ class UserController extends Controller
        'users'=> $user,
        'status'=>'success'
      ),200);
-  }//fin metodo index 
+  }//fin método index 
+
   public function show($id){
       $user = User::find($id);
       return response()->json(array(
         'users'=> $user,
         'status' => 'success'
       ),200);
-  }// fin metodo show
+  }// fin método show
+
   public function update($id, Request $request){
-      $hash = $request->header('Authorization',null);
-      $jwtAuth = new JwtAuth();
-      $checkToken = $jwtAuth->checkToken($hash);
-  
-        if($checkToken){
-        //Recoger parametros POST
-          $json = $request->input('json', null);
-          $params = json_decode($json);
-          $params_array = json_decode($json, true);
-  
-          //Validar los datos
-          $validate = Validator::make($params_array,[
-            'name' =>'required',
-            'surname' =>'required',
-            'telefono' =>'required'
-          ]);
-          if($validate->fails())
-          {
-            return response()->json($validate->errors(),400);
-          }
-          //Actualizar datos
-          unset($params_array['id']);
-          unset($params_array['email']);
-          unset($params_array['password']);
-          unset($params_array['created_at']);
-          unset($params_array['updated_at']);
-          
-  
-          $users = User::where('id',$id)->update($params_array);
-            $data = array(
-              'users' => $params,
-              'status' => 'success',
-              'code' => 200
-            );
-        }else{
-          //Error 
-          $data = array(
-            'message' => 'Login incorrecto',
-            'status' => 'error',
-            'code' => 300
-          );
+    $hash = $request->header('Authorization',null);
+    $jwtAuth = new JwtAuth();
+    $checkToken = $jwtAuth->checkToken($hash);
+
+      if($checkToken){
+      //Recoger parametros POST
+        $json = $request->input('json', null);
+        $params = json_decode($json);
+        $params_array = json_decode($json, true);
+
+        //Validar los datos
+        $validate = Validator::make($params_array,[
+          'name' =>'required',
+          'surname' =>'required',
+          'telefono' =>'required'
+        ]);
+        if($validate->fails())
+        {
+          return response()->json($validate->errors(),400);
         }
-        return response()->json($data, 200);
-  }// fin metodo update
+        //Actualizar datos
+        unset($params_array['id']);
+        unset($params_array['email']);
+        unset($params_array['password']);
+        unset($params_array['created_at']);
+        unset($params_array['updated_at']);
+        
+
+        $users = User::where('id',$id)->update($params_array);
+          $data = array(
+            'users' => $params,
+            'status' => 'success',
+            'code' => 200
+          );
+      }else{
+        //Error 
+        $data = array(
+          'message' => 'No se pudo editar este campo',
+          'status' => 'error',
+          'code' => 300
+        );
+      }
+      return response()->json($data, 200);
+}// fin metodo update
   
   public function destroy($id, Request $request){
+
       $hash = $request->header('Authorization', null);
       $jwtAuth = new JwtAuth();
       $checkToken = $jwtAuth->checkToken($hash);
@@ -174,7 +178,6 @@ class UserController extends Controller
           'status' => 'success',
           'code' => 200
         ); 
-  
       }else{
         //Error 
         $data = array(
@@ -185,21 +188,40 @@ class UserController extends Controller
         );
       }
       return response()->json($data, 200);
-    }// fin metodo destroy
+  }// fin método destroy
 
   public function getClientes(){
-    $user = DB::table('users')->where('roles_id','2')->get();
+    $user = DB::table('users')->where('roles_id','2')
+    ->orderBy('name', 'asc')
+    ->get();
     return response()->json(array(
       'users'=> $user,
       'status'=>'success'
     ),200);
-   }
-  
+}// fin método getClientes
+
    public function getOperador(){
-    $user = DB::table('users')->where('roles_id','3')->get();
+    $user = DB::table('users')->orderBy('name', 'asc')
+    ->where('roles_id','3')
+    ->get();
     return response()->json(array(
       'users'=> $user,
       'status'=>'success'
     ),200);
-   }
-}
+   } // fin método getOperador
+
+   public function getRol(){
+     /* $sql = "SELECT nombre FROM roles WHERE id IN (SELECT roles_id FROM users WHERE id = $id); ";
+    $user = $sql; */
+
+    $user = Roles::join("users","users.roles_id","=","roles.id")
+    ->where('users.roles_id','=','1')
+    ->get();
+    return response()->json(array(
+      'users'=> $user,
+      'status'=>'success'
+    ),200);
+   } // Fin método GetRol
+
+  }
+  

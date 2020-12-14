@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Helpers\JwtAuth;
 use App\Models\viaje;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class ViajesController extends Controller
 {
@@ -170,6 +171,16 @@ public function destroy($id, Request $request)
     }
     return response()->json($data, 200);
   }
+
+  public function buscar($id)
+    {
+      
+      $viaje =DB::table('viaje')->where('id','like',"%$id%")->get();
+      return response()->json(array(
+        'viaje'=> $viaje,
+        'status' => 'success'
+      ),200);
+    }
   
 }// Fin clase
 
