@@ -32,3 +32,7 @@ Route::post('/api/cambiar-contraseña', 'App\Http\Controllers\ChangePassword@pro
 Route::resource('/api/usuarios', 'App\Http\Controllers\UserController');
 Route::resource('/api/viajes', 'App\Http\Controllers\ViajesController');
 Route::resource('/api/roles', 'App\Http\Controllers\RolesController');
+
+Route::post('/api/upload', 'App\Http\Controllers\ImagenesController@store' );
+Route::get('/api/files', 'App\Http\Controllers\ImagenesController@index' );
+Route::get('/api/delete', 'App\Http\Controllers\ImagenesController@destroy' );
