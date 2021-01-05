@@ -12,18 +12,18 @@ class ImagenesController extends Controller
 {
     public function index(Request $request )
     {
-     $roles = Imagenes::all();
+     $imagen = Imagenes::all();
      return response()->json(array(
-       'roles'=> $roles,
+       'imagen'=> $imagen,
        'status'=>'success'
      ),200);
     }
 
     public function show($id)
     {
-      $roles = Imagenes::find($id);
+      $imagen = Imagenes::find($id);
       return response()->json(array(
-        'roles'=> $roles,
+        'imagen'=> $imagen,
         'status' => 'success'
       ),200);
     }
@@ -53,19 +53,19 @@ class ImagenesController extends Controller
         }
         
        //Guardar Viaje 
-        $roles = new Imagenes();
-        $roles->file_name        = $params->file_name;
-        $roles->save();
+        $imagen = new Imagenes();
+        $imagen->file_name        = $params->file_name;
+        $imagen->save();
 
         $data = array(
-          'roles' => $roles,
+          'imagen' => $imagen,
           'status' => 'success',
           'code' => 200
         );
       }else{
         //Error 
         $data = array(
-          'message' => 'Rol incorrecto',
+          'message' => 'Imagen incorrecta',
           'status' => 'error',
           'code' => 400
         );
@@ -93,22 +93,22 @@ class ImagenesController extends Controller
         {
           return response()->json($validate->errors(),400);
         }
-        //Actualizar roles
+        //Actualizar imagen
         unset($params_array['id']);
         unset($params_array['created_at']);
         unset($params_array['updated_at']);
 
-          $roles = Imagenes::where('id',$id)->update($params_array);
+          $imagen = Imagenes::where('id',$id)->update($params_array);
 
           $data = array(
-            'roles' => $params,
+            'imagen' => $params,
             'status' => 'success',
             'code' => 200
           );
       }else{
         //Error 
         $data = array(
-          'message' => 'Rol incorrecto',
+          'message' => 'Imagen incorrecta',
           'status' => 'error',
           'code' => 400
         );
@@ -125,14 +125,14 @@ public function destroy($id, Request $request)
     if($checkToken)
     {
       //comprobar el registro existente
-      $roles = Imagenes::find($id);
+      $imagen = Imagenes::find($id);
 
       //Borrar Registro
-      $roles->delete();
+      $imagen->delete();
 
       //Devolver registro
       $data = array(
-        'viaje' => $roles,
+        'imagen' => $imagen,
         'status' => 'success',
         'code' => 200
       ); 
@@ -140,7 +140,7 @@ public function destroy($id, Request $request)
     }else{
       //Error 
       $data = array(
-        'message' => 'Roles incorrecto',
+        'message' => 'imagen incorrecta',
         'status' => 'error',
         'code' => 400
         
